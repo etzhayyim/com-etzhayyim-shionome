@@ -4,3 +4,5 @@ methods/__pycache__/
 cells/**/__pycache__/
 **/__pycache__/
 data/shionome.datoms.kotoba.edn
+
+.cpcache/
