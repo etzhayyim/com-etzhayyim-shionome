@@ -7,7 +7,7 @@
 | Stage | Scope | Gate | State |
 |---|---|---|---|
 | **R0** | ontology + 4 lexicons + `:representative` seed + analyzer (weave/concentration/social/ingest/export) + kotoba Datom-log writer + **autonomous heartbeat loop** (offline, dry-run, content-addressed DAG) + 5 cell scaffolds (`.solve()` raise) + tests | ADR-2606072200 (PROPOSED) | ✅ landed |
-| R1 | ingest + flow_graph + rotation_weave build kotoba EAVT datoms over **offline** public-source batches; no live posting | Council Lv6+ ≥3 per cell | ⏳ (source registry ready — `wire/wire/registry/sources.seed.json`, 12 sources `unverified-seed`) |
+| R1 | ingest + flow_graph + rotation_weave build kotoba EAVT datoms over **offline** public-source batches; no live posting | Council Lv6+ ≥3 per cell | ⏳ (source registry ready — `wire/registry/sources.seed.json`, 12 sources `unverified-seed`) |
 | R2 | +regime_observer on live read-path; first dry-run networkPosts reviewed | Council Lv6+ ≥4 + 30-day public comment | ⏳ |
 | R3 | +social_post live publication under 1 SBT = 1 vote + member signature; live public-market-data ingest | Council Lv7+ + operator | ⏳ |
 
@@ -68,7 +68,7 @@
   flow or a post citing Bloomberg/Refinitiv/FactSet/CapIQ/四季報 is refused (Rider §2(e)/N5).
 - **Registry-driven sourcing** (G11): an ingest record naming a registry `sourceId` gets the
   registry's verification status (a caller cannot forge `:authoritative` for an unverified source).
-- **R1-readiness — public-source registry** (`wire/wire/registry/sources.seed.json` + `docs/registry-verification.md`): 12
+- **R1-readiness — public-source registry** (`wire/registry/sources.seed.json` + `docs/registry-verification.md`): 12
   global primary sources (FRED / US Treasury / ICI / SEC EDGAR / BOJ flow-of-funds / JPX / ECB /
   IMF-IIF / EIA / LBMA / on-chain explorers / US Census), each with a `mapsTo` shionome datom type,
   all `unverified-seed` (G8 — no live ingest until Council Lv6+ + operator verifies).

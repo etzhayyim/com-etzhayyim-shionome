@@ -3,7 +3,7 @@
   of src/shionome/methods/registry.cljc.
 
   Ported 1:1 from the REAL Python test_registry.py (the cross-language oracle):
-  every assertion exercises the committed seed wire/wire/registry/sources.seed.json, so a
+  every assertion exercises the committed seed wire/registry/sources.seed.json, so a
   divergence between the cljc and Python readers would fail here. Concrete oracle
   values were confirmed by running the real Python (12 sources, all
   'unverified-seed' → :representative, us-fred jurisdiction 'us')."

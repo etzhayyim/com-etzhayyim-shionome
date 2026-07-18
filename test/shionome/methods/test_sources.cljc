@@ -1,11 +1,11 @@
 (ns shionome.methods.test-sources
   "Cross-language oracle tests for the 潮目 public-source registry seed integrity.
-  1:1 port of src/shionome/methods/test_sources.cljc. ADR-2606072200. Reads wire/wire/registry/sources.seed.json."
+  1:1 port of src/shionome/methods/test_sources.cljc. ADR-2606072200. Reads wire/registry/sources.seed.json."
   (:require [clojure.test :refer [deftest is testing]]
             [clojure.string :as str]
             [cheshire.core :as json]))
 
-(def reg-path "wire/wire/registry/sources.seed.json")
+(def reg-path "wire/registry/sources.seed.json")
 (defn- reg [] (json/parse-string (slurp reg-path)))
 (def DENY ["bloomberg" "refinitiv" "eikon" "factset" "capital iq" "capiq"
            "morningstar direct" "pitchbook" "四季報"])

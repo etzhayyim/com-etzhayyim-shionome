@@ -2,7 +2,7 @@
   "registry.cljc — 潮目 (shionome) public-source registry access. ADR-2606072200.
   Clojure port of src/shionome/methods/registry.cljc (1:1).
 
-  Loads wire/wire/registry/sources.seed.json and exposes the source catalog to the ingest
+  Loads wire/registry/sources.seed.json and exposes the source catalog to the ingest
   path:
     - get-source / source-ids
     - sourcing-for — G11 honesty DRIVEN BY the registry: a record from a VERIFIED
@@ -21,7 +21,7 @@
 (def ^:private reg-path
   "Repo-relative path to the seed registry (bb runs at the worktree root;
   mirrors `pathlib … parents[1] / registry / sources.seed.json`)."
-  "wire/wire/registry/sources.seed.json")
+  "wire/registry/sources.seed.json")
 
 #?(:clj
    (defn load-registry
