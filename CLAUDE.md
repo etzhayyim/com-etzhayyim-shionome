@@ -33,7 +33,7 @@ ingest ─▶ flow_graph ─▶ rotation_weave ─▶ regime_observer ─▶ soc
  data)                    by-class/region)                        body scan, ≥2 sources)
 ```
 
-`methods/weave.py` is the heart: it validates every bucket/flow/snapshot against the closed vocab,
+`src/shionome/methods/weave.cljc` is the heart: it validates every bucket/flow/snapshot against the closed vocab,
 builds the graph, and computes aggregate **edge-primary** metrics — net flow per bucket (where
 money is going/leaving), rotation pairs (どこからどこへ), per-bucket inflow HHI, by-asset-class /
 by-region slices, a FACTUAL cross-asset regime descriptor, and the **stock pyramid** (`stock_pyramid`
@@ -48,7 +48,7 @@ SIZE is a factual observed quantity (like `:return-pct`) carrying `no_trade_noti
 rating/signal/target (G2/G4 untouched). Stock (usd-tn) is **never** summed with flow magnitudes
 (usd-bn): two distinct on-read views over the same append-only graph.
 
-`methods/grounding.py` is an OPTIONAL **entity-grounding bridge** answering *who is inside each
+`src/shionome/methods/grounding.cljc` is an OPTIONAL **entity-grounding bridge** answering *who is inside each
 layer?* — it decomposes a pyramid layer into the named real entities sibling actors already mirror
 (equities ← kabuto listed-company ledger, with disclosure DEPTH ← kanjō; a systemic-institutions
 overlay ← hokorobi) and reports the coverage gap honestly (value coverage as a stated lower bound, a
@@ -60,16 +60,16 @@ sibling ledger → that layer is reported ungrounded, never a crash); the **core
 (`weave`/`concentration`) must NOT import it** (no sibling-file coupling in the hermetic core);
 its figures are sizes/counts/fractions only — never a per-entity rating/signal/target (G2/G4).
 
-`methods/autorun.py` is the **autonomous heartbeat**: each cycle it runs the whole pipeline by
+`src/shionome/methods/autorun.cljc` is the **autonomous heartbeat**: each cycle it runs the whole pipeline by
 itself and persists a content-addressed transaction to the append-only kotoba Datom log
-(`methods/kotoba.py`). That is "kotoba で自律的に稼働" in the charter-permitted form — live external
+(`src/shionome/methods/kotoba.cljc`). That is "kotoba で自律的に稼働" in the charter-permitted form — live external
 posting/ingest stays G8-gated (one human gate-flip away).
 
 ## The 11 gates — do NOT weaken
 
 Structural invariants live in **three places each** (ontology `:db/allowed`/closed-vocab vectors
 + lexicon `:const`/`:enum` + Python `ValueError`/refusal). Touch one, touch all three or you've
-made a charter violation representable. `methods/test_charter_invariants.py` guards this.
+made a charter violation representable. `src/shionome/methods/test_charter_invariants.cljc` guards this.
 
 - **G1 public-bucket-only / no-doxxing** — `:bucket/scope ∈ {:asset-class :sector :region :theme}`.
   `:individual`/`:account`/`:portfolio`/`:trader`/`:person` are **unrepresentable**. shionome maps
@@ -103,13 +103,13 @@ made a charter violation representable. `methods/test_charter_invariants.py` gua
 
 ## When editing
 
-- The closed vocab in `00-contracts/schemas/capital-flow-ontology.kotoba.edn`
+- The closed vocab in `contracts/capital-flow-ontology.edn`
   (`:ontology/bucket-scopes`, `:ontology/flow-kinds`, `:ontology/snapshot-metrics`,
   `:ontology/post-statuses`) is the single source the invariant test parses. Adding a
   trade-bearing flow kind, a private bucket scope, a `:bucket/rating`, or a `:published` post
   status fails `test_charter_invariants.py`.
 - `weave.TRADE_TOKENS` is the Python mirror of the no-trade rule; keep it in sync with the cell
-  state machines (`cells/*/state_machine.py`) and `social._guard_no_trade`.
+  state machines (`src/shionome/cells/*/state_machine.cljc`) and `social._guard_no_trade`.
 - `.solve()` raises `RuntimeError` on every cell at R0 — live execution is G8-gated. Do not wire a
   cell to a live market-data fetch or a live firehose post.
 - Tests are standalone-runnable (`python3 test_*.py`); run everything with `./run_tests.sh`
@@ -131,7 +131,7 @@ publication under 1 SBT = 1 vote).
 ./run_tests.sh                          # all 15 suites (182 tests)
 cd methods && python3 weave.py          # concentration + stock pyramid over the :representative seed
 cd methods && python3 grounding.py      # decompose pyramid layers into named entities (kabuto/hokorobi) + coverage
-cd methods && python3 analyze.py        # end-to-end dry-run → methods/out/intel-report.md
+bb -m shionome.methods.analyze        # end-to-end dry-run → src/shionome/methods/out/intel-report.md
 cd methods && python3 social.py         # dry-run social posts
 cd methods && python3 ingest.py         # offline normalize (──live refuses without the G8 gate)
 cd methods && python3 autorun.py --cycles 3 --fresh   # AUTONOMOUS loop → kotoba Datom log

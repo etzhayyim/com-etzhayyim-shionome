@@ -45,7 +45,7 @@ signal, no price target, no over/under-weight call, no portfolio instruction. Ev
 ## Substrate
 
 State is the **kotoba Datom log** (append-only, content-addressed EAVT — ADR-2605312345). The
-autonomous heartbeat (`methods/autorun.py`) persists each observation cycle as a content-addressed
+autonomous heartbeat (`src/shionome/methods/autorun.cljc`) persists each observation cycle as a content-addressed
 transaction linked into a verifiable commit-DAG. Inference/narration is Murakumo-only
 (ADR-2605215000). No RisingWave / SQL.
 
@@ -55,7 +55,7 @@ transaction linked into a verifiable commit-DAG. Inference/narration is Murakumo
 ./run_tests.sh                                       # 182 tests, 15 suites
 cd methods && python3 weave.py                       # concentration + stock pyramid
 cd methods && python3 grounding.py                   # who is inside each layer + coverage gap
-cd methods && python3 analyze.py                     # dry-run intel report
+bb -m shionome.methods.analyze                     # dry-run intel report
 cd methods && python3 autorun.py --cycles 3 --fresh  # autonomous loop over the kotoba Datom log
 ```
 

@@ -7,7 +7,7 @@
 | Stage | Scope | Gate | State |
 |---|---|---|---|
 | **R0** | ontology + 4 lexicons + `:representative` seed + analyzer (weave/concentration/social/ingest/export) + kotoba Datom-log writer + **autonomous heartbeat loop** (offline, dry-run, content-addressed DAG) + 5 cell scaffolds (`.solve()` raise) + tests | ADR-2606072200 (PROPOSED) | ✅ landed |
-| R1 | ingest + flow_graph + rotation_weave build kotoba EAVT datoms over **offline** public-source batches; no live posting | Council Lv6+ ≥3 per cell | ⏳ (source registry ready — `registry/sources.seed.json`, 12 sources `unverified-seed`) |
+| R1 | ingest + flow_graph + rotation_weave build kotoba EAVT datoms over **offline** public-source batches; no live posting | Council Lv6+ ≥3 per cell | ⏳ (source registry ready — `wire/wire/registry/sources.seed.json`, 12 sources `unverified-seed`) |
 | R2 | +regime_observer on live read-path; first dry-run networkPosts reviewed | Council Lv6+ ≥4 + 30-day public comment | ⏳ |
 | R3 | +social_post live publication under 1 SBT = 1 vote + member signature; live public-market-data ingest | Council Lv7+ + operator | ⏳ |
 
@@ -25,7 +25,7 @@
   debt 140 / broad-money 121 / equities 115 / gold 16 / cash 8 / crypto 3). A SIZE is a factual
   observed quantity carrying `no_trade_notice=true` — never a per-asset rating/signal/target
   (G2/G4 untouched); stock (usd-tn) is never summed with flow magnitudes (usd-bn).
-- **Entity grounding (`methods/grounding.py`)** — answers *who is inside each layer?* by
+- **Entity grounding (`src/shionome/methods/grounding.cljc`)** — answers *who is inside each layer?* by
   decomposing a pyramid layer into the NAMED real entities sibling actors already mirror, and
   reporting the coverage gap HONESTLY. On the checked-out seeds: the **equities** layer is grounded
   by kabuto's **1,719** listed companies — value coverage **$46.8tn / $115tn ≈ 40.7%** (a stated
@@ -68,7 +68,7 @@
   flow or a post citing Bloomberg/Refinitiv/FactSet/CapIQ/四季報 is refused (Rider §2(e)/N5).
 - **Registry-driven sourcing** (G11): an ingest record naming a registry `sourceId` gets the
   registry's verification status (a caller cannot forge `:authoritative` for an unverified source).
-- **R1-readiness — public-source registry** (`registry/sources.seed.json` + `VERIFICATION.md`): 12
+- **R1-readiness — public-source registry** (`wire/wire/registry/sources.seed.json` + `docs/registry-verification.md`): 12
   global primary sources (FRED / US Treasury / ICI / SEC EDGAR / BOJ flow-of-funds / JPX / ECB /
   IMF-IIF / EIA / LBMA / on-chain explorers / US Census), each with a `mapsTo` shionome datom type,
   all `unverified-seed` (G8 — no live ingest until Council Lv6+ + operator verifies).
@@ -79,13 +79,14 @@ Two concrete runtime artifacts make "kotoba wasm として自律稼働 + fleet c
 **empirically built/verified off-fleet**; the only remaining step to *live* operation is a human
 operator gate-flip (G7/G8 — Council Lv6+ + operator + member signature):
 
-1. **Standalone kotoba-WASM component** (`wasm/`) — `app.py` + `wit/world.wit` built with
+1. **Standalone kotoba-WASM component** (`wasm/shionome-core/`) — Rust source with
+   the external contract at `wire/wit/world.wit`, built with
    **componentize-py** into `shionome-actor.wasm` (18.5 MB, WASI Preview 2), `wasm-tools
    validate` clean, **jco-transpiled and executed under node** (`node verify.mjs` → regime=risk-on,
    `no_trade=true`). CID `bafybeigk6whellozcybop4btzcrdtybd5yejjrax7tczxhapfsyya64hka`
-   (dag-pb, T2 donated-mesh). The `.wasm` is gitignored (reproducible from source via `build.sh`).
+   (dag-pb, T2 donated-mesh). The generated `.wasm` remains gitignored.
 
-2. **5 Murakumo-fleet cron cells** (`20-actors/magatama/cells/shionome_*`) — `kotoba_langgraph`
+2. **5 Murakumo-fleet cron cells** (`./magatama/src/shionome/cells/shionome_*`) — `kotoba_langgraph`
    Pregel cells ("Resident in Kotoba WASM", the ossekai pattern), each shipping a
    `cells.toml.fragment` with a `trigger = { kind = "cron", … }` on a real fleet node:
 
@@ -106,5 +107,5 @@ operator gate-flip (G7/G8 — Council Lv6+ + operator + member signature):
    cells fire the analyze→dry-run cycle, while live market-data ingest + live external posting stay
    G8-gated).
 
-The append-only Python autonomous loop (`methods/autorun.py`) remains the off-fleet self-driving
+The append-only Python autonomous loop (`src/shionome/methods/autorun.cljc`) remains the off-fleet self-driving
 demonstrator over a local kotoba Datom-log file; the fleet cron cells are its production form.
